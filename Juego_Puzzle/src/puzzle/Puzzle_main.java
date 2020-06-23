@@ -9,10 +9,12 @@ public class Puzzle_main implements ActionListener {
 
 	private JFrame ventana;
 	private JButton btn_piezas[];
-	private JButton btn_inicio, btn_temp, btn_reinicio;
+	private JButton btn_inicio, btn_temp, btn_reinicio, btn_inicio2;
 	private JLabel lbl_titulo1, lbl_seg, lbl_min, lbl_hora;
+	private int dir_x, dir_y;
+	private int btn_temp2;
 	
-	Timer timer = new Timer(500, new ActionListener(){
+	Timer timer = new Timer(1000, new ActionListener(){
 		public void actionPerformed(ActionEvent e) {
 			int seg, min, hora;
 			
@@ -38,7 +40,34 @@ public class Puzzle_main implements ActionListener {
 		}
 	});
 		
-	
+	Timer movimiento = new Timer (50, new ActionListener() { 
+		public void actionPerformed(ActionEvent e) {
+			//btn_temp = (JButton)e.getSource();
+			int x, y;
+			x = btn_piezas[btn_temp2].getLocation().x;
+			y = btn_piezas[btn_temp2].getLocation().y;
+			
+			int blanco_x, blanco_y;
+			blanco_x = btn_piezas[15].getLocation().x;
+			blanco_y = btn_piezas[15].getLocation().y;
+			
+			
+			if(x+dir_x <= blanco_x && y+dir_y == blanco_y) {
+				btn_piezas[btn_temp2].setLocation(x+dir_x, y+dir_y);
+				
+				System.out.println(btn_piezas[15].getLocation());
+				System.out.println(btn_piezas[btn_temp2].getLocation());
+				System.out.println(x+dir_x);
+				System.out.println(x+80);
+			}
+			else {
+				movimiento.stop();
+				btn_piezas[15].setLocation(x-80, y-0);
+			}
+			
+		}
+		
+	}); 
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -75,6 +104,7 @@ public class Puzzle_main implements ActionListener {
 		for(int i=0; i<btn_piezas.length; i++) {
 			btn_piezas[i] = new JButton(String.valueOf(i+1));
 			btn_piezas[i].setBounds(600+80*(i%4),150+80*(i/4),80,80);
+			btn_piezas[i].setActionCommand(String.valueOf(i));
 			btn_piezas[i].addActionListener(this);
 			ventana.add(btn_piezas[i]);
 		}
@@ -100,6 +130,18 @@ public class Puzzle_main implements ActionListener {
 		});
 		ventana.add(btn_inicio);
 		
+		btn_inicio2 = new JButton("INICIAR 2");
+		btn_inicio2.setBounds(700, 510, 100, 30);
+		btn_inicio2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				lbl_seg.setText("00");
+				lbl_min.setText("00");
+				lbl_hora.setText("00");
+				timer.start();
+				iniciar2();
+			}
+		});
+		
 		btn_reinicio = new JButton("REINICIAR");
 		btn_reinicio.setBounds(600, 550, 100, 30);
 		btn_reinicio.addActionListener(new ActionListener(){
@@ -116,14 +158,29 @@ public class Puzzle_main implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		btn_temp = (JButton)e.getSource();
+		btn_temp2 = Integer.parseInt(e.getActionCommand());
+		int xClick = btn_piezas[btn_temp2].getLocation().x;
+		int yClick = btn_piezas[btn_temp2].getLocation().y;
+		
+		//btn_temp = (JButton)e.getSource();
 		int blanco_x, blanco_y;
 		blanco_x = btn_piezas[15].getLocation().x;
 		blanco_y = btn_piezas[15].getLocation().y;
 		
-		if((btn_temp.getLocation().x == (btn_piezas[15].getLocation().x)-80) && (btn_temp.getLocation().y == btn_piezas[15].getLocation().y)) {
+		if((xClick == blanco_x-80) && (yClick == blanco_y)){
+			dir_x = 10;
+			dir_y = 0;
+			movimiento.start();
+		}
+		
+		
+		/*if((btn_temp.getLocation().x == (btn_piezas[15].getLocation().x)-80) && (btn_temp.getLocation().y == btn_piezas[15].getLocation().y)) {
+			//movimiento.start();
+			//dir_x = -80;
+			//dir_y = 0;  NO FUNCIONO 
 			btn_piezas[15].setLocation(btn_temp.getLocation().x, btn_temp.getLocation().y);
 			btn_temp.setLocation(blanco_x, blanco_y);
+			
 		}	
 		
 		
@@ -140,7 +197,7 @@ public class Puzzle_main implements ActionListener {
 		else if((btn_temp.getLocation().x == btn_piezas[15].getLocation().x) && (btn_temp.getLocation().y == (btn_piezas[15].getLocation().y)+80)) {
 			btn_piezas[15].setLocation(btn_temp.getLocation().x, btn_temp.getLocation().y);
 			btn_temp.setLocation(blanco_x, blanco_y);
-		}	
+		}	*/
 		
 		
 	}
@@ -149,10 +206,7 @@ public class Puzzle_main implements ActionListener {
 		int j, x, y;
 		Random rnd = new Random();
 		
-		//btn_piezas[15].setLocation(840, 390);
-		
 		for(int i=0; i<btn_piezas.length-1; i++) { 
-			//btn_piezas[i].setBounds(600+80*(i%4),150+80*(i/4),80,80);
 			
 			x = btn_piezas[i].getLocation().x;
 			y = btn_piezas[i].getLocation().y;
@@ -160,16 +214,21 @@ public class Puzzle_main implements ActionListener {
 				
 			btn_piezas[i].setLocation(btn_piezas[j].getLocation().x, btn_piezas[j].getLocation().y);
 			btn_piezas[j].setLocation(x, y);	
-			//btn_piezas[15].setLocation(840, 390);
 			
 		}
 		
-		//btn_piezas[15].setLocation(840, 390);
 		System.out.println("espacio en blanco: "+btn_piezas[15].getLocation().x);
 	}
 	
-	//crear un boton de reinicio
-	//intentar la condicion de reinicio para cuando la j sea = 15
+	public void iniciar2() {
+		int x, y;
+		x = btn_piezas[15].getLocation().x;
+		y = btn_piezas[15].getLocation().y;
+		
+		btn_piezas[15].setLocation(btn_piezas[14].getLocation().x, btn_piezas[14].getLocation().y);
+		btn_piezas[14].setLocation(x, y);
+	}
+
 	
 	public void reiniciar() {
 		for(int i=0; i<btn_piezas.length; i++) {
@@ -178,6 +237,7 @@ public class Puzzle_main implements ActionListener {
 			ventana.add(btn_piezas[i]);
 		}
 		btn_piezas[15].setVisible(false);
+		movimiento.stop();
 	}
 
 }
