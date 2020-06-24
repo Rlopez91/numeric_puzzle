@@ -11,7 +11,7 @@ public class Puzzle_main implements ActionListener {
 	private JButton btn_piezas[];
 	private JButton btn_inicio, btn_temp, btn_reinicio, btn_inicio2;
 	private JLabel lbl_titulo1, lbl_seg, lbl_min, lbl_hora;
-	private int dir_x, dir_y;
+	private int dir_x, dir_y, blanco_x, blanco_y, x, y;
 	private int btn_temp2;
 	
 	Timer timer = new Timer(1000, new ActionListener(){
@@ -40,31 +40,50 @@ public class Puzzle_main implements ActionListener {
 		}
 	});
 		
-	Timer movimiento = new Timer (50, new ActionListener() { 
+	Timer movimiento = new Timer (100, new ActionListener() { 
 		public void actionPerformed(ActionEvent e) {
-			//btn_temp = (JButton)e.getSource();
-			int x, y;
+	
 			x = btn_piezas[btn_temp2].getLocation().x;
 			y = btn_piezas[btn_temp2].getLocation().y;
 			
-			int blanco_x, blanco_y;
-			blanco_x = btn_piezas[15].getLocation().x;
-			blanco_y = btn_piezas[15].getLocation().y;
-			
-			
-			if(x+dir_x <= blanco_x && y+dir_y == blanco_y) {
-				btn_piezas[btn_temp2].setLocation(x+dir_x, y+dir_y);
-				
-				System.out.println(btn_piezas[15].getLocation());
-				System.out.println(btn_piezas[btn_temp2].getLocation());
-				System.out.println(x+dir_x);
-				System.out.println(x+80);
+			if(x < blanco_x) {
+				btn_piezas[15].setLocation(blanco_x-80, blanco_y);
+				btn_piezas[btn_temp2].setLocation(x+dir_x, y);
+				/*if(x == blanco_x+80) {
+					movimiento.stop();
+				}*/
 			}
-			else {
+			
+			else if(y < blanco_y) {
+				btn_piezas[15].setLocation(blanco_x, blanco_y-80);
+				btn_piezas[btn_temp2].setLocation(x, y+dir_y);
+				/*if(y == blanco_y+80) {
+					movimiento.stop();
+				}*/
+			}
+			
+			else if(x > blanco_x) {
+				btn_piezas[15].setLocation(blanco_x+80, blanco_y);
+				btn_piezas[btn_temp2].setLocation(x+dir_x, y);
+				/*if(x == blanco_x-80) {
+					movimiento.stop();
+				}*/
+			}
+			
+			else if(y > blanco_y) {
+				btn_piezas[15].setLocation(blanco_x, blanco_y+80);
+				btn_piezas[btn_temp2].setLocation(x, y+dir_y);
+				/*if(y == blanco_y-80) {
+					movimiento.stop();
+				}*/
+			}
+			
+			else if(x==blanco_x+80 || y==blanco_y+80 || x==blanco_x-80 || y==blanco_y-80) {
 				movimiento.stop();
-				btn_piezas[15].setLocation(x-80, y-0);
 			}
-			
+			//movimiento.stop();
+	//desde aqui para atras funciona el movimiento con el stop y todo, ahora solo programar los otros movimientos
+		//DONDE COLOCAR EL .stop??????????
 		}
 		
 	}); 
@@ -109,12 +128,7 @@ public class Puzzle_main implements ActionListener {
 			ventana.add(btn_piezas[i]);
 		}
 		btn_piezas[15].setVisible(false); //ultimo boton invisible para controlar las posiciones
-		System.out.println(btn_piezas[15].getLocation().x);
-		System.out.println(btn_piezas[15].getLocation().y);
-		System.out.println(btn_piezas[14].getLocation().x);
-		System.out.println(btn_piezas[14].getLocation().y);//el juego se gana cuando btn_piezas[14] pos en Y es = a btn_piezas[15] pos en Y+80 AND pos en X sean iguales
-		System.out.println(btn_piezas[11].getLocation().x);
-		System.out.println(btn_piezas[11].getLocation().y);
+
 		
 		
 		btn_inicio = new JButton("INICIAR");
@@ -158,26 +172,38 @@ public class Puzzle_main implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
+		if(!movimiento.isRunning()) {
 		btn_temp2 = Integer.parseInt(e.getActionCommand());
 		int xClick = btn_piezas[btn_temp2].getLocation().x;
 		int yClick = btn_piezas[btn_temp2].getLocation().y;
 		
-		//btn_temp = (JButton)e.getSource();
-		int blanco_x, blanco_y;
 		blanco_x = btn_piezas[15].getLocation().x;
 		blanco_y = btn_piezas[15].getLocation().y;
 		
 		if((xClick == blanco_x-80) && (yClick == blanco_y)){
-			dir_x = 10;
+			dir_x = 20;
 			dir_y = 0;
 			movimiento.start();
 		}
 		
+		if(xClick == blanco_x && yClick == blanco_y-80) {
+			dir_x = 0;
+			dir_y = 20;
+			movimiento.start();
+		}
 		
+		if(xClick == blanco_x+80 && yClick == blanco_y) {
+			dir_x = -20;
+			dir_y = 0;
+			movimiento.start();
+		}
+		
+		if(xClick == blanco_x && yClick == blanco_y+80) {
+			dir_x = 0;
+			dir_y = -20;
+			movimiento.start();
+		}
 		/*if((btn_temp.getLocation().x == (btn_piezas[15].getLocation().x)-80) && (btn_temp.getLocation().y == btn_piezas[15].getLocation().y)) {
-			//movimiento.start();
-			//dir_x = -80;
-			//dir_y = 0;  NO FUNCIONO 
 			btn_piezas[15].setLocation(btn_temp.getLocation().x, btn_temp.getLocation().y);
 			btn_temp.setLocation(blanco_x, blanco_y);
 			
@@ -198,7 +224,7 @@ public class Puzzle_main implements ActionListener {
 			btn_piezas[15].setLocation(btn_temp.getLocation().x, btn_temp.getLocation().y);
 			btn_temp.setLocation(blanco_x, blanco_y);
 		}	*/
-		
+		}
 		
 	}
 	
