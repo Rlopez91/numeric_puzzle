@@ -49,41 +49,43 @@ public class Puzzle_main implements ActionListener {
 			if(x < blanco_x) {
 				btn_piezas[15].setLocation(blanco_x-80, blanco_y);
 				btn_piezas[btn_temp2].setLocation(x+dir_x, y);
-				/*if(x == blanco_x+80) {
+				
+				System.out.println(x);
+				System.out.println(blanco_x);
+				if(x == blanco_x-20) {
+					System.out.println("entro al stop");
 					movimiento.stop();
-				}*/
+				}
 			}
 			
 			else if(y < blanco_y) {
 				btn_piezas[15].setLocation(blanco_x, blanco_y-80);
 				btn_piezas[btn_temp2].setLocation(x, y+dir_y);
-				/*if(y == blanco_y+80) {
+				if(y == blanco_y-20) {
 					movimiento.stop();
-				}*/
+				}
 			}
 			
 			else if(x > blanco_x) {
 				btn_piezas[15].setLocation(blanco_x+80, blanco_y);
 				btn_piezas[btn_temp2].setLocation(x+dir_x, y);
-				/*if(x == blanco_x-80) {
+				if(x == blanco_x+20){ 
 					movimiento.stop();
-				}*/
+				}
 			}
 			
 			else if(y > blanco_y) {
 				btn_piezas[15].setLocation(blanco_x, blanco_y+80);
 				btn_piezas[btn_temp2].setLocation(x, y+dir_y);
-				/*if(y == blanco_y-80) {
+				if(y == blanco_y+20) {
 					movimiento.stop();
-				}*/
+				}
 			}
 			
 			else if(x==blanco_x+80 || y==blanco_y+80 || x==blanco_x-80 || y==blanco_y-80) {
 				movimiento.stop();
 			}
-			//movimiento.stop();
-	//desde aqui para atras funciona el movimiento con el stop y todo, ahora solo programar los otros movimientos
-		//DONDE COLOCAR EL .stop??????????
+
 		}
 		
 	}); 
